@@ -52,7 +52,8 @@ public class Sha2Hashing {
 	 * @return
 	 * @throws IOException
 	 */
-	public Boolean writeToFile(String filePath, ArrayList<String> listOfWords) throws IOException {
+	public Boolean writeToFile(String filePath, ArrayList<String> listOfWords) {
+		try {
 		File file = new File(filePath);
 
 		// creates the file
@@ -72,8 +73,14 @@ public class Sha2Hashing {
 
 		writer.flush();
 		writer.close();
-
-		return null;
+		return true;
+		}
+		catch(Exception e)
+		{
+			e.printStackTrace();
+			
+		}
+		return false;
 	}
 
 	/**
