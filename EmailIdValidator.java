@@ -58,7 +58,7 @@ public class EmailIdValidator {
 	 * @param strings
 	 * @return
 	 */
-	public Map<String, Boolean> wordCount(ArrayList<String> strings) {
+	public Map<String, Boolean> emailValidator(ArrayList<String> strings) {
 		Map<String, Boolean> map = new HashMap<String, Boolean>();
 		Iterator<String> itr = strings.iterator();
 		while (itr.hasNext()) {
@@ -78,7 +78,7 @@ public class EmailIdValidator {
 	public static void main(String args[]) throws IOException {
 		EmailIdValidator obj = new EmailIdValidator();
 		ArrayList<String> listOfWords = obj.fileRead("emails.txt");
-		System.out.println(obj.wordCount(listOfWords));
+		System.out.println(obj.emailValidator(listOfWords));
 
 	}
 }
