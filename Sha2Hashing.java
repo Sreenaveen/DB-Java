@@ -6,17 +6,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-/**
- * @author sreenaveen
- *
- */
+
 public class Sha2Hashing {
 
-	/**
-	 * @param filePath
-	 * @return
-	 * @throws IOException
-	 */
+	
 	public ArrayList<String> fileRead(String filePath) throws IOException {
 		FileReader in = null;
 		BufferedReader read = null;
@@ -46,12 +39,7 @@ public class Sha2Hashing {
 		return sha256hex;
 	}
 
-	/**
-	 * @param filePath
-	 * @param listOfWords
-	 * @return
-	 * @throws IOException
-	 */
+
 	public Boolean writeToFile(String filePath, ArrayList<String> listOfWords) {
 		try {
 		File file = new File(filePath);
@@ -83,10 +71,6 @@ public class Sha2Hashing {
 		return false;
 	}
 
-	/**
-	 * @param args
-	 * @throws IOException
-	 */
 	public static void main(String args[]) throws IOException {
 		Sha2Hashing obj = new Sha2Hashing();
 		ArrayList<String> listOfWords = obj.fileRead("emails.txt");
