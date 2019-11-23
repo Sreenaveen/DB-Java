@@ -1,0 +1,105 @@
+// DB6B.java CS5151/6051 2019 Cheng
+// enumerate keys and others
+// Usage: java DB6B F
+// F is a file that has the first line all the attributes and 
+// then an FD a line with a space between the left-hand side and the right-hand side
+
+import java.io.*;
+import java.util.*;
+
+public class DB6B{
+
+ class FD{
+  	HashSet<Character> lhs; char rhs;
+  	public FD(HashSet<Character> l, char r){ lhs = l; rhs = r; }
+  	public boolean equals(Object obj){
+   	 	FD fd2 = (FD)obj;
+    		return lhs.equals(fd2.lhs) && rhs == fd2.rhs;
+ 	 }
+ };
+
+  	HashSet<Character> R = new HashSet<Character>(); // all attributes
+  	HashSet<FD> F = new HashSet<FD>(); // the set of FDs
+	int cloRuns = 0;
+
+  public DB6B(String filename){  // 1. split FDs so each FD has a single attribute on the right
+    	Scanner in = null;
+    	try {
+      		in = new Scanner(new File(filename));
+    	} catch (FileNotFoundException e){
+       		System.err.println(filename + " not found");
+       		System.exit(1);
+    	}
+    	String line = in.nextLine();
+    	for (int i = 0; i < line.length(); i++) R.add(line.charAt(i));
+    	while (in.hasNextLine()){
+      		HashSet<Character> l = new HashSet<Character>();
+     		String[] terms = in.nextLine().split(" ");
+      		for (int i = 0; i < terms[0].length(); i++) l.add(terms[0].charAt(i));
+     		for (int i = 0; i < terms[1].length(); i++) F.add(new FD(l, terms[1].charAt(i)));
+    	}
+    	in.close();
+  }
+
+  HashSet<Character> string2set(String X){
+    	HashSet<Character> Y = new HashSet<Character>();
+    	for (int i = 0; i < X.length(); i++) Y.add(X.charAt(i));
+   	return Y;
+  }
+
+  void printSet(Set<Character> X){
+    	for (char c: X) System.out.print(c);
+  }
+
+  HashSet<Character> closure(HashSet<Character> Xinit){ // Algorithm 3.7
+	cloRuns++;
+    	HashSet<Character> X = new HashSet<Character>(Xinit); // 2. initialize
+    	int len = 0;
+    	do { // 3. push out
+      		len = X.size();
+     		F.forEach(fd -> {
+			if (X.containsAll(fd.lhs) && !X.contains(fd.rhs)) X.add(fd.rhs);
+		});
+    	} while (X.size() > len);  
+    	return X; // 4. found closure of X
+  }
+
+  boolean isKey(HashSet<Character> possibleKey){  // precondition: possibleKey must be a superkey
+	for (char c: possibleKey){
+		HashSet<Character> set2 = new HashSet<Character>(possibleKey);
+		set2.remove(c);
+		if (closure(set2).containsAll(R)) return false;
+	}
+	return true;
+  }
+
+ void SE3(HashSet<Character> view, HashSet<Character> subset){  // print out all the keys in the relation
+	 if ((closure(subset).containsAll(R)) && ( isKey(subset)))
+	 {   // Your code
+		 
+		 printSet(subset);  // When and how to print? printSet(subset); System.out.println();
+		 System.out.println();
+	 }
+	 else
+	 {  // need to go down the set-enumeration tree (only when subset is not a superkey!)
+	HashSet<Character> newView = new HashSet<Character>(view);
+	view.forEach(c -> {
+	newView.remove(c);
+	subset.add(c);
+	SE3(new HashSet<Character>(newView), new HashSet<Character>(subset));
+	subset.remove(c);
+	});
+   }
+ }
+
+  void enumerateKeys(){
+     SE3(R, new HashSet<Character>());
+     System.out.println("closure has been called " + cloRuns + " times.");
+  }
+
+
+ public static void main(String[] args){
+    DB6B db6 = new DB6B(args[0]);
+    db6.enumerateKeys();
+ }
+}

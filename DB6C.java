@@ -1,0 +1,139 @@
+// DB6C.java CS5151/6051 2019 Cheng
+// Algorithm 3.12 of IIR, projecting FDs onto X
+// Usage: java DB6C F
+// F is a file that has the first line all the attributes and 
+// then an FD a line with a space between the left-hand side and the right-hand side
+// F could be exercise3210a.txt -- exercise3210d.txt or example3_8.txt
+// will project the relation onto relation S(A, B, C)
+
+import java.io.*;
+import java.util.*;
+
+public class DB6C{
+
+ class FD{
+  	HashSet<Character> lhs; char rhs;
+  	public FD(HashSet<Character> l, char r){ lhs = l; rhs = r; }
+  	public boolean equals(Object obj){
+   	 	FD fd2 = (FD)obj;
+    		return lhs.equals(fd2.lhs) && rhs == fd2.rhs;
+ 	 }
+ };
+
+  	HashSet<Character> R = new HashSet<Character>(); // all attributes
+  	HashSet<FD> F = new HashSet<FD>(); // the set of FDs
+	int cloRuns = 0;
+
+  public DB6C(String filename){  // 1. split FDs so each FD has a single attribute on the right
+    	Scanner in = null;
+    	try {
+      		in = new Scanner(new File(filename));
+    	} catch (FileNotFoundException e){
+       		System.err.println(filename + " not found");
+       		System.exit(1);
+    	}
+    	String line = in.nextLine();
+    	for (int i = 0; i < line.length(); i++) R.add(line.charAt(i));
+    	while (in.hasNextLine()){
+      		HashSet<Character> l = new HashSet<Character>();
+     		String[] terms = in.nextLine().split(" ");
+      		for (int i = 0; i < terms[0].length(); i++) l.add(terms[0].charAt(i));
+     		for (int i = 0; i < terms[1].length(); i++) F.add(new FD(l, terms[1].charAt(i)));
+    	}
+    	in.close();
+  }
+
+  public DB6C(HashSet<Character> r, HashSet<FD> f){ R = r; F = f; }  // a new relation
+
+  HashSet<Character> string2set(String X){
+    	HashSet<Character> Y = new HashSet<Character>();
+    	for (int i = 0; i < X.length(); i++) Y.add(X.charAt(i));
+   	return Y;
+  }
+
+  void printSet(Set<Character> X){
+    	for (char c: X) System.out.print(c);
+  }
+
+  HashSet<Character> closure(HashSet<Character> Xinit){ // Algorithm 3.7
+	cloRuns++;
+    	HashSet<Character> X = new HashSet<Character>(Xinit); // 2. initialize
+    	int len = 0;
+    	do { // 3. push out
+      		len = X.size();
+     		F.forEach(fd -> {
+			if (X.containsAll(fd.lhs) && !X.contains(fd.rhs)) X.add(fd.rhs);
+		});
+    	} while (X.size() > len);  
+    	return X; // 4. found closure of X
+  }
+
+  HashSet<FD> project(HashSet<Character> R1, HashSet<Character> view, HashSet<Character> subset){
+	// Algorithm 3.12, starts with view = R1 and subset subset = empty
+	HashSet<FD> T = new HashSet<FD>(); // Let T be the eventual output set of FD's.
+	// Initially, T is empty.  Step 1
+	HashSet<Character> clo = closure(subset);
+	clo.forEach(c -> {  // Step 2
+		if (!subset.contains(c) && R1.contains(c)) T.add(new FD(subset, c)); // non-trivial fds
+	});
+	if (!clo.containsAll(R)){  // if subset is superkey, no superset will lead to more non-trivial fds
+		HashSet<Character> newView = new HashSet<Character>(view);
+		view.forEach(c -> {
+			newView.remove(c);
+			subset.add(c);
+			T.addAll(project(R1, new HashSet<Character>(newView), 
+				new HashSet<Character>(subset)));
+			subset.remove(c);
+		});
+	}
+	return T;  // Step 3 is not done
+  }
+
+  boolean followedBy(FD fd){ return closure(fd.lhs).contains(fd.rhs);  }
+
+  HashSet<FD> minimize(){ // find a minimal basis of F
+	HashSet<FD> minimal = new HashSet<FD>(F);
+	boolean changes = true;
+	while (changes){
+		changes = false;
+		for (FD fd : minimal)
+		{  // You fill out ??? 
+			// ??? could be fds, F, newF, or minimal
+			HashSet<FD> newF = new HashSet<FD>(minimal);
+			newF.remove(fd);
+			DB6C newRelation = new DB6C(R, newF);
+			if (newRelation.followedBy(fd))
+			{
+				System.out.print("removing ");
+				printSet(fd.lhs);
+				System.out.println(" " + fd.rhs);
+				changes = true;
+				minimal = newF;
+				break;
+			}
+		}
+	}
+	return minimal;
+  }
+
+  void algorithm312(HashSet<Character> S){
+    	HashSet<FD> fds = project(S, new HashSet<Character>(S), new HashSet<Character>());
+   	System.out.println("A basis for FD projection:");
+   	fds.forEach(fd -> {
+		printSet(fd.lhs);
+		System.out.println(" " + fd.rhs);
+	});
+    	System.out.println("A minimal basis for FD projection:");
+	DB6C newRelation = new DB6C(S, fds);  
+    	HashSet<FD> fds2 = newRelation.minimize();  // Step 3 of Algorithm 3.12
+   	fds2.forEach(fd -> {
+		printSet(fd.lhs);
+		System.out.println(" " + fd.rhs);
+	});
+  }
+
+ public static void main(String[] args){
+    DB6C db6 = new DB6C(args[0]);
+    db6.algorithm312(db6.string2set("ABC"));  // assume that we project FDs onto ABC, as in Exercise 3.2.10
+ }
+}
