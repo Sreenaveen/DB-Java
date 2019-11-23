@@ -8,20 +8,11 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-/**
- * @author sreenaveen
- *
- */
 public class PhoneNumberValidator {
 	public final Pattern VALID_PHONE_NUMBER_INDIA_REGEX = Pattern.compile("(0/91)?[7-9][0-9]{9}");
 	public final Pattern VALID_PHONE_NUMBER_AUSTRALIA_REGEX = Pattern.compile(
 			"^(?:\\+?(61))? ?(?:\\((?=.*\\)))?(0?[2-57-8])\\)? ?(\\d\\d(?:[- ](?=\\d{3})|(?!\\d\\d[- ]?\\d[- ]))\\d\\d[- ]?\\d[- ]?\\d{3})$");
 
-	/**
-	 * @param filePath
-	 * @return
-	 * @throws IOException
-	 */
 	public ArrayList<String> fileRead(String filePath) throws IOException {
 		FileReader in = null;
 		BufferedReader read = null;
@@ -46,12 +37,7 @@ public class PhoneNumberValidator {
 		return listOfWords;
 	}
 
-	
-	/**
-	 * @param emailStr
-	 * @param country
-	 * @return
-	 */
+
 	public boolean validate(String emailStr, String country) {
 		Matcher matcher = null;
 		if (country.equalsIgnoreCase("India"))
@@ -61,11 +47,6 @@ public class PhoneNumberValidator {
 
 		return matcher.find();
 	}
-
-	/**
-	 * @param strings
-	 * @return
-	 */
 	public Map<String, Boolean> wordCount(ArrayList<String> strings) {
 		Map<String, Boolean> map = new HashMap<String, Boolean>();
 		Iterator<String> itr = strings.iterator();
@@ -79,10 +60,6 @@ public class PhoneNumberValidator {
 		return map;
 	}
 
-	/**
-	 * @param args
-	 * @throws IOException
-	 */
 	public static void main(String args[]) throws IOException {
 		PhoneNumberValidator obj = new PhoneNumberValidator();
 		ArrayList<String> listOfWords = obj.fileRead("Phonenumbers.txt");
