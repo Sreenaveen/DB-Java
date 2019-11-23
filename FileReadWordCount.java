@@ -6,15 +6,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-/**
- * @author sreenaveen
- *
- */
 public class FileReadWordCount {
-	/**
-	 * @param strings
-	 * @return
-	 */
+	
 	public Map<String, Integer> wordCount(ArrayList<String> strings) {
 		Map<String, Integer> map = new HashMap<String, Integer>();
 		Iterator<String> itr = strings.iterator();
@@ -30,11 +23,6 @@ public class FileReadWordCount {
 		return map;
 	}
 
-	/**
-	 * @param filePath
-	 * @return
-	 * @throws IOException
-	 */
 	public ArrayList<String> fileRead(String filePath) throws IOException {
 		FileReader in = null;
 		BufferedReader read = null;
@@ -59,10 +47,6 @@ public class FileReadWordCount {
 		return listOfWords;
 	}
 
-	/**
-	 * @param args
-	 * @throws IOException
-	 */
 	public static void main(String args[]) throws IOException {
 		FileReadWordCount obj = new FileReadWordCount();
 		ArrayList<String> listOfWords = obj.fileRead("README.md");
