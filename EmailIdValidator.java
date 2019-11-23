@@ -16,11 +16,6 @@ public class EmailIdValidator {
 	public final Pattern VALID_EMAIL_ADDRESS_REGEX = Pattern.compile("^[A-Z0-9._%+-]+@[A-Z0-9.-]+\\.[A-Z]{2,6}$",
 			Pattern.CASE_INSENSITIVE);
 
-	/**
-	 * @param filePath
-	 * @return
-	 * @throws IOException
-	 */
 	public ArrayList<String> fileRead(String filePath) throws IOException {
 		FileReader in = null;
 		BufferedReader read = null;
@@ -45,19 +40,12 @@ public class EmailIdValidator {
 		return listOfWords;
 	}
 
-	/**
-	 * @param emailStr
-	 * @return
-	 */
+
 	public boolean validate(String emailStr) {
 		Matcher matcher = VALID_EMAIL_ADDRESS_REGEX.matcher(emailStr);
 		return matcher.find();
 	}
 
-	/**
-	 * @param strings
-	 * @return
-	 */
 	public Map<String, Boolean> emailValidator(ArrayList<String> strings) {
 		Map<String, Boolean> map = new HashMap<String, Boolean>();
 		Iterator<String> itr = strings.iterator();
@@ -71,10 +59,7 @@ public class EmailIdValidator {
 		return map;
 	}
 
-	/**
-	 * @param args
-	 * @throws IOException
-	 */
+
 	public static void main(String args[]) throws IOException {
 		EmailIdValidator obj = new EmailIdValidator();
 		ArrayList<String> listOfWords = obj.fileRead("emails.txt");
