@@ -9,12 +9,6 @@ import java.util.Set;
  */
 public class Searching {
 
-	
-	/**
-	 * @param arr
-	 * @param numberToSearch
-	 * @return
-	 */
 	public boolean collectionSetSearch(int arr[], Integer numberToSearch) {
 		Set<Integer> intSet = new HashSet<Integer>();
 		for (int i : arr) {
@@ -23,12 +17,6 @@ public class Searching {
 		return intSet.contains(numberToSearch);
 	}
 
-	
-	/**
-	 * @param arr
-	 * @param numberToSearch
-	 * @return
-	 */
 	public boolean arraysSearch(int arr[], int numberToSearch) {
 
 		int retVal = Arrays.binarySearch(arr, numberToSearch);
@@ -38,11 +26,6 @@ public class Searching {
 			return false;
 	}
 
-	/**
-	 * @param arr
-	 * @param item
-	 * @return
-	 */
 	public  boolean normalSearch(int[] arr, int item) {
 	      for (int n : arr) {
 	         if (item == n) {
@@ -52,10 +35,6 @@ public class Searching {
 	      return false;
 	   }
 
-	/**
-	 * @param args
-	 * @throws IOException
-	 */
 	public static void main(String args[]) throws IOException {
 		Searching obj = new Searching();
 		int[] list_of_numbers = { 9, 55, 10, 12, 23, 244, 2131 };
